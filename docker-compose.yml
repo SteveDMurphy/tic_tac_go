@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  tictac_db:
+    image: postgres:13
+    container_name: composed_tictac_db
+    environment:
+      POSTGRES_USER: tictac
+      POSTGRES_PASSWORD: tictac
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_tictac:/var/lib/postgresql/data
+
+  tictac_server:
+    container_name: composed_tictac_server
+    build:
+      context: tictac_server/
+    volumes:
+      - type: bind
+        source: ./tictac_server
+        target: /tictac_server/
+        read_only: False
+    command: python app.py
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - tictac_db
+
+volumes:
+  pgdata_tictac: null
