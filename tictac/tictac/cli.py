@@ -9,13 +9,13 @@ def tictac():
     pass
 
 
-@tictac.command(name="games")
+@tictac.command(name="games", help="Returns all started games, order by when they were created")
 def view_games():
     tictac_class = Tictac()
     click.echo(tictac_class.view_games())
 
 
-@tictac.command(name="gamemoves")
+@tictac.command(name="gamemoves", help="Returns all moves in a specified game")
 def view_game_moves():
     game_id = click.prompt("Input a valid game ID", type=int)
 
@@ -25,7 +25,7 @@ def view_game_moves():
     click.echo(game_moves)
 
 
-@tictac.command(name="newgame")
+@tictac.command(name="newgame", help="Creates a new game and walks moves through to completion")
 def new_game():
     tictac_class = Tictac()
     tictac_class.create_new_game()
@@ -45,11 +45,10 @@ def new_game():
             # TODO add some validation here
             game_complete = tictac_class.take_turn(position_id=move)
         else:
+            # selects a random position ID from the available moves
             random_selection_id = randrange(len(available_moves))
-            click.echo("random int: " + str(random_selection_id))
-            click.echo(available_moves[random_selection_id][0])
-            move = available_moves[random_selection_id][0]
-            game_complete = tictac_class.take_turn(position_id=move, player_is_robot=1)
+            computer_move = available_moves[random_selection_id][0]
+            game_complete = tictac_class.take_turn(position_id=computer_move, player_is_robot=1)
 
         if game_complete == 1:
             if tictac_class.winning_player_is_robot == 0:
@@ -58,22 +57,8 @@ def new_game():
                 click.echo("OOF - sorry, the computer won this time...")
             click.echo("Winning combination:")
             click.echo(tictac_class.winning_combination)
-        else:
+        elif game_complete == -1:
             click.echo("oh dang, nobody won... try again?")
-
-    # if click.confirm("Ready to play?"):
-
-    #     click.echo("Awesome!")
-    #     current_game = Tictac()
-
-    #     current_game.create_new_game()
-
-    #     click.echo("playing game_id: " + str(current_game.game_id))
-    #     for turn in range(5):
-    #         click.echo("Took turn number " + str(turn + 1))
-    #         click.echo(current_game.take_turn())
-    # else:
-    #     click.echo("Goodbye!")
 
 
 if __name__ == "__main__":

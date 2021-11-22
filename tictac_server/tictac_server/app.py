@@ -92,25 +92,9 @@ class Move(db.Model):
 
 ## Endpoints
 
-@app.route("/person/")
-def hello():
-    return jsonify({"name": "Jimit", "address": "India"})
-
-
-@app.route("/numbers/")
-def print_list():
-    app.logger.debug("This is a DEBUG message")
-    # app.logger.info("This is an INFO message")
-    # app.logger.warning("This is a WARNING message")
-    # app.logger.error("This is an ERROR message")
-    return jsonify(list(range(5)))
-
-
 @app.route("/new_game/", methods=["GET", "POST"])
 def create_game():
-    app.logger.info("Creating a new game and returning the game id")
-    # this will likely generate an instance of a game class that plays it through to completion
-    # improvements may include being able to pick up an abandoned game and finish it
+    """Creates a new game and returns the ID from the database"""
 
     new_game = Game()
     db.session.add(new_game)
@@ -120,22 +104,13 @@ def create_game():
     # returning the id gave me some headaches
     # https://stackoverflow.com/questions/1316952/sqlalchemy-flush-and-get-inserted-id
 
-    # app.logger.debug(new_game.game_id)
-
     return jsonify(new_game.game_id)
 
 ## Add another route to update the game for state and times if you have time (add things like winner, etc. maybe?)
 
-
-@app.route("/take_turn/", methods=["GET", "POST"])
-def take_turn():
-    app.logger.info("Submitting a validated move to the board")
-    position = request.args.get("position")
-    return jsonify(int(position) + 10)
-
 @app.route("/make_move/", methods=["GET", "POST"])
 def make_move():
-    app.logger.info("Submitting a validated move to the board")
+    """Posts a validated move to the database, returning the inserted ID"""
 
     if request.method == "POST":
         game_id = request.form.get("game_id")
@@ -143,13 +118,6 @@ def make_move():
         move_position = request.form.get("move_position")
         move_position_index = request.form.get("move_position_index")
         move_maker = request.form.get("move_maker")
-    else:
-        game_id = 3
-        move_sequence = 5
-        move_position = "(3,1)"
-        move_position_index = 7
-        move_maker = 0
-
 
     new_move = Move(game_id, move_sequence, move_position, move_position_index, move_maker)
 
@@ -163,7 +131,7 @@ def make_move():
 
 @app.route("/games/", methods=["GET"])
 def get_games():
-    app.logger.info("Return the list of games in sequence of when played")
+    """Returns the list of games played, in the order they were played."""
     game_list = Game.query.order_by(Game.game_modified_at.asc()).all()
 
     app.logger.debug(game_list)
@@ -173,7 +141,7 @@ def get_games():
 
 @app.route("/game_moves/")
 def game_moves():
-    app.logger.info("Return the list of games in sequence of when played")
+    """Returns the list of moves played within a game, in the order they were played."""
 
     move_game_id = request.args.get("game_id")
 
@@ -182,11 +150,7 @@ def game_moves():
     return jsonify([move.serialize for move in moves_in_game])
 
 
-# app.run(debug=True)
-# if __name__ == "__main__":
-#     app.run(host="0.0.0.0", debug=True)
-
-app.run(host="0.0.0.0", port=8000, debug=True)
+app.run(host="0.0.0.0", port=8000)
 
 # This saved me some headaches
 # https://stackoverflow.com/questions/30323224/deploying-a-minimal-flask-app-in-docker-server-connection-issues

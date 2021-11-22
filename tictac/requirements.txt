@@ -7,9 +7,12 @@ idna==3.3
 isort==5.10.1
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
+mypy
 mypy-extensions==0.4.3
 pathspec==0.9.0
 platformdirs==2.4.0
 pylint==2.11.1
 regex==2021.11.10
 requests==2.26.0
+# Testing
+pytest
