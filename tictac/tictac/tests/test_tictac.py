@@ -16,12 +16,18 @@ def test_valid_board():
     assert tictac_class._generate_game_board() == valid_game_board
 
 def test_valid_win():
-    # test other options?
     tictac_class = Tictac()
     tictac_class.game_moves = [0, 0, 0]
     tictac_class.game_board = tictac_class._generate_game_board()
     move_combination = tictac_class._check_for_winner(player_is_robot=0)
     assert move_combination == True
+
+    tictac_class.game_moves = [0, None, 0, 0]
+
+    move_combination = tictac_class._check_for_winner(player_is_robot=0)
+
+    assert move_combination == False
+
 
 def test_full_game():
 

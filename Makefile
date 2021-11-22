@@ -20,10 +20,23 @@ tictac:
 	@docker-compose up -d tictac_server
 	@docker-compose run tictac /bin/bash -c "pip install -e . && /bin/bash"
 
-
-tictac-debug:
-	@echo Let\'s play tic-tac-toe!
+tictac-server-debug:
+	@echo Spinning up and watching the tictac_server
 	@docker-compose down
 	@docker-compose up -d tictac_db
 	@docker exec composed_tictac_db sleep 5
 	@docker-compose up tictac_server
+
+test-tictac-server:
+	@docker-compose down
+	@docker-compose up -d tictac_db
+	@docker exec composed_tictac_db sleep 5
+	@docker-compose up -d tictac_server
+	@docker exec -it composed_tictac_server pytest --verbose
+
+test-tictac:
+	@docker-compose down
+	@docker-compose up -d tictac_db
+	@docker exec composed_tictac_db sleep 5
+	@docker-compose up -d tictac_server
+	@docker-compose run tictac /bin/bash -c "pip install -e . && pytest --verbose"
