@@ -186,7 +186,7 @@ def game_moves():
 # if __name__ == "__main__":
 #     app.run(host="0.0.0.0", debug=True)
 
-app.run(host="0.0.0.0", debug=True)
+app.run(host="0.0.0.0", port=8000, debug=True)
 
 # This saved me some headaches
 # https://stackoverflow.com/questions/30323224/deploying-a-minimal-flask-app-in-docker-server-connection-issues

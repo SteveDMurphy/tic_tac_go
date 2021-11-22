@@ -17,6 +17,13 @@ tictac:
 	@docker-compose down
 	@docker-compose up -d tictac_db
 	@docker exec composed_tictac_db sleep 5
+	@docker-compose up -d tictac_server
+	@docker-compose run tictac /bin/bash -c "pip install -e . && /bin/bash"
+
+
+tictac-debug:
+	@echo Let\'s play tic-tac-toe!
+	@docker-compose down
+	@docker-compose up -d tictac_db
+	@docker exec composed_tictac_db sleep 5
 	@docker-compose up tictac_server
-# @docker-compose up -d tictac_server
-# @docker exec -ti composed_tictac_server /bin/bash

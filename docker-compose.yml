@@ -23,11 +23,29 @@ services:
         read_only: False
     command: python app.py
     expose:
-      - 5000
+      - 8000
     ports:
-      - "5000:5000"
+      - "8000:8000"
     depends_on:
       - tictac_db
 
+  tictac:
+    container_name: composed_tictac_cli
+    build:
+      context: tictac/
+    volumes:
+      - type: bind
+        source: ./tictac
+        target: /tictac/
+        read_only: False
+    command: pip install -e .
+    depends_on:
+      - tictac_db
+      - tictac_server
+
 volumes:
   pgdata_tictac: null
+
+networks:
+  default:
+    name: tictac
